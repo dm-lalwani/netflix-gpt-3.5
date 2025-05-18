@@ -1,10 +1,8 @@
+import Body from "./components/Body";
+
 function App() {
   return (
-    <div className="">
-      <header className="">
-        <p className="text-3xl font-bold">Namaste Netflix GPT !!</p>
-      </header>
-    </div>
+    <Body />
   );
 }
 
