@@ -1,7 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import Header from "./Header";
 
 const Login = () => {
+  const [isSignIn, setIsSignIn] = useState(false);
+  const handleSignIn = (e) => {
+    e.preventDefault();
+    setIsSignIn(!isSignIn);
+  };
   return (
     <>
       <Header />
@@ -14,9 +19,16 @@ const Login = () => {
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="w-full max-w-md p-8 space-y-8 bg-black bg-opacity-80 rounded-lg">
             <h2 className="text-3xl font-bold text-white text-center">
-              Sign In
+              {isSignIn ? "Sign In" : "Sign Up"}
             </h2>
             <form className="space-y-6">
+              {!isSignIn && (
+                <input
+                  className="w-full px-4 py-2 text-white bg-gray-700 rounded"
+                  type="text"
+                  placeholder="Full Name"
+                />
+              )}
               <input
                 className="w-full px-4 py-2 text-white bg-gray-700 rounded"
                 type="email"
@@ -29,14 +41,19 @@ const Login = () => {
               />
               <button
                 className="w-full px-4 py-2 text-white bg-red-600 rounded hover:bg-red-700"
-                type="submit"
+                onClick={handleSignIn}
               >
-                Sign In
+                {isSignIn ? "Sign In" : "Sign Up"}
               </button>
             </form>
             <div className="text-gray-500 text-center">
-              New to Netflix?{" "}
-              <span className="text-white cursor-pointer">Sign up now</span>
+              {isSignIn ? "New to Netflix? " : "Already a user? "}&nbsp;
+              <span
+                className="text-white cursor-pointer"
+                onClick={handleSignIn}
+              >
+                {isSignIn ? "Sign Up Now " : "Sign In"}
+              </span>
             </div>
           </div>
         </div>
