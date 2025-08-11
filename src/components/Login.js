@@ -1,12 +1,91 @@
-import React, { useState } from "react";
+import { useRef, useState } from "react";
 import Header from "./Header";
+import { validateSignIn, validateSignUp } from "../utils/validate";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  updateProfile,
+} from "firebase/auth";
+import { auth } from "../utils/firebase";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { addUser } from "../utils/userSlice";
 
 const Login = () => {
-  const [isSignIn, setIsSignIn] = useState(false);
+  const [isSignIn, setIsSignIn] = useState(true);
+  const [errorMessage, setErrorMessage] = useState("");
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const name = useRef(null);
+  const email = useRef(null);
+  const password = useRef(null);
+
   const handleSignIn = (e) => {
     e.preventDefault();
-    setIsSignIn(!isSignIn);
+    // validate form inputs here
+    const message = isSignIn
+      ? validateSignIn(email.current.value, password.current.value)
+      : validateSignUp(
+          name.current.value,
+          email.current.value,
+          password.current.value
+        );
+    setErrorMessage(message || "");
+
+    if (!isSignIn) {
+      createUserWithEmailAndPassword(
+        auth,
+        email.current.value,
+        password.current.value
+      )
+        .then((userCredential) => {
+          // Signed up
+          const user = userCredential.user;
+          updateProfile(user, {
+            displayName: name.current.value,
+          })
+            .then(() => {
+              const { uid, email, displayName } = auth.currentUser;
+              dispatch(
+                addUser({
+                  uid,
+                  email,
+                  displayName,
+                })
+              );
+              navigate("/browse");
+            })
+            .catch((error) => {
+              setErrorMessage(error.message);
+            });
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          setErrorMessage(errorCode + " - " + errorMessage);
+        });
+    } else {
+      signInWithEmailAndPassword(
+        auth,
+        email.current.value,
+        password.current.value
+      )
+        .then((userCredential) => {
+          // Signed in
+          const user = userCredential.user;
+          
+          console.log(user);
+          navigate("/browse");
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          setErrorMessage(errorCode + " - " + errorMessage);
+        });
+    }
   };
+
   return (
     <>
       <Header />
@@ -24,21 +103,25 @@ const Login = () => {
             <form className="space-y-6">
               {!isSignIn && (
                 <input
+                  ref={name}
                   className="w-full px-4 py-2 text-white bg-gray-700 rounded"
                   type="text"
                   placeholder="Full Name"
                 />
               )}
               <input
+                ref={email}
                 className="w-full px-4 py-2 text-white bg-gray-700 rounded"
                 type="email"
                 placeholder="Email or phone number"
               />
               <input
+                ref={password}
                 className="w-full px-4 py-2 text-white bg-gray-700 rounded"
                 type="password"
                 placeholder="Password"
               />
+              <p className="text-red-500 font-semibold">{errorMessage}</p>
               <button
                 className="w-full px-4 py-2 text-white bg-red-600 rounded hover:bg-red-700"
                 onClick={handleSignIn}
@@ -50,7 +133,7 @@ const Login = () => {
               {isSignIn ? "New to Netflix? " : "Already a user? "}&nbsp;
               <span
                 className="text-white cursor-pointer"
-                onClick={handleSignIn}
+                onClick={() => setIsSignIn(!isSignIn)}
               >
                 {isSignIn ? "Sign Up Now " : "Sign In"}
               </span>

@@ -1,27 +1,21 @@
-import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { signOut } from "firebase/auth";
+import { Link, useNavigate } from "react-router-dom";
+import { auth } from "../utils/firebase";
 
-const Header = () => {
-  const [show, setShow] = useState(false);
-
-  useEffect(() => {
-    window.addEventListener("scroll", () => {
-      if (window.scrollY > 100) {
-        setShow(true);
-      } else {
-        setShow(false);
-      }
-    });
-    return () => {
-      window.removeEventListener("scroll", () => {});
-    };
-  }, []);
-
+const Header = ({ className }) => {
+  const navigate = useNavigate();
+  const handleSignOut = () => {
+    signOut(auth)
+      .then(() => {
+        navigate("/");
+      })
+      .catch((error) => {
+        // An error happened.
+      });
+  };
   return (
     <header
-      className={`fixed top-0 w-full z-10 transition-all duration-300 ${
-        show ? "bg-black" : "bg-transparent"
-      }`}
+      className={`fixed top-0 w-full z-10 transition-all duration-300 ${className}`}
     >
       <div className="flex justify-between items-center p-4">
         <div className="flex items-center">
@@ -57,10 +51,13 @@ const Header = () => {
             className="p-1 rounded bg-gray-800 text-white"
           />
           <img
-            className="h-8 rounded-full"
-            src="/path-to-avatar.png"
+            className="h-8 "
+            src="https://occ-0-3216-2164.1.nflxso.net/dnm/api/v6/vN7bi_My87NPKvsBoib006Llxzg/AAAABTZ2zlLdBVC05fsd2YQAR43J6vB1NAUBOOrxt7oaFATxMhtdzlNZ846H3D8TZzooe2-FT853YVYs8p001KVFYopWi4D4NXM.png?r=229"
             alt="Avatar"
           />
+          <button onClick={handleSignOut} className="text-white">
+            Logout
+          </button>
         </div>
       </div>
     </header>
