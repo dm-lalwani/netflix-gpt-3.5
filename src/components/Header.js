@@ -1,18 +1,39 @@
-import { signOut } from "firebase/auth";
+import { onAuthStateChanged, signOut } from "firebase/auth";
 import { Link, useNavigate } from "react-router-dom";
 import { auth } from "../utils/firebase";
+import { useDispatch } from "react-redux";
+import { addUser, removeUser } from "../utils/userSlice";
+import { useEffect } from "react";
 
 const Header = ({ className }) => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const handleSignOut = () => {
     signOut(auth)
       .then(() => {
-        navigate("/");
       })
       .catch((error) => {
         // An error happened.
       });
   };
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        const { uid, email, displayName } = user;
+        dispatch(
+          addUser({
+            uid,
+            email,
+            displayName,
+          })
+        );
+        navigate("/browse");
+      } else {
+        dispatch(removeUser());
+        navigate("/");
+      }
+    });
+  }, []);
   return (
     <header
       className={`fixed top-0 w-full z-10 transition-all duration-300 ${className}`}

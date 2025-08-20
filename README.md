@@ -15,6 +15,8 @@
 - Created User store with UserSlice
 - Implemented Sign out
 - Update Profile
+- BugFix: Signup user displayName update
+- BugFix: If the user is not signed in redirect /browse to Login Page and viceversa
 
 # Features
 
