@@ -16,7 +16,9 @@
 - Implemented Sign out
 - Update Profile
 - BugFix: Signup user displayName update
-- BugFix: If the user is not signed in redirect /browse to Login Page and viceversa
+- BugFix: If the user is not signed in redirect /browse to Login Page and vice-versa
+- Unsubsribe to the onAuthStateChanged callback
+- Adding hardcoded values to constants files
 
 # Features
 
