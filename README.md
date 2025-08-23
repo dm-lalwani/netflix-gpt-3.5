@@ -19,6 +19,13 @@
 - BugFix: If the user is not signed in redirect /browse to Login Page and vice-versa
 - Unsubsribe to the onAuthStateChanged callback
 - Adding hardcoded values to constants files
+- Regiter TMDB API & create an app & get access token
+- Get Data from TMDB now playing movies list API
+- Custom Hook for Now Playing Movies
+- Create movieSlice
+- Update Store with movies Data
+- Planning for MainContauiner & secondary container
+- Fetch Data for Trailer Video
 
 # Features
 
