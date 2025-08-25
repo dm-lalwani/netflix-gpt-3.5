@@ -7,12 +7,15 @@ const MainContainer = () => {
   if (movies.length === 0) return;
 
   const mainMovie = movies[0];
-  console.log(mainMovie);
+  const { original_title, overview, id } = mainMovie;
   return (
-    <div>
-      <VideoTitle />
-      <VideoBackground />
-    </div>
+    <section className="relative w-screen aspect-video overflow-hidden">
+      {/* Background Video */}
+      <VideoBackground movieId={id} />
+
+      {/* Overlay Title */}
+      <VideoTitle title={original_title} overview={overview} />
+    </section>
   );
 };
 
