@@ -1,13 +1,17 @@
-import useNowPlayingMovies from "../hooks/useNowPlayingMovies";
+import useFetchMovies from "../hooks/useFetchMovies";
 import Header from "./Header";
 import MainContainer from "./MainContainer";
 import SecondaryContainer from "./SecondaryContainer";
 
 const Browse = () => {
-  useNowPlayingMovies();
+  useFetchMovies("now_playing", "nowPlayingMovies");
+  useFetchMovies("popular", "popularMovies");
+  useFetchMovies("top_rated", "topRatedMovies");
+  useFetchMovies("upcoming", "upcomingMovies");
+
   return (
     <>
-      <Header className={"bg-black"} />
+      <Header />
       <MainContainer />
       <SecondaryContainer />
     </>
