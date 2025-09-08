@@ -9,6 +9,7 @@ import {
 import { auth } from "../utils/firebase";
 import { useDispatch } from "react-redux";
 import { addUser } from "../utils/userSlice";
+import { BG_URL } from "../utils/constants";
 
 const Login = () => {
   const [isSignIn, setIsSignIn] = useState(true);
@@ -88,7 +89,7 @@ const Login = () => {
       <div className="relative h-screen bg-black">
         <img
           className="object-cover w-full h-full opacity-50"
-          src="https://assets.nflxext.com/ffe/siteui/vlv3/f841d4c7-10e1-40af-bcae-07a3f8dc141a/f6d7434e-d6de-4185-a6d4-c77a2d08737b/US-en-20220502-popsignuptwoweeks-perspective_alpha_website_medium.jpg"
+          src={BG_URL}
           alt="Background"
         />
         <div className="absolute inset-0 flex items-center justify-center">

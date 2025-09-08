@@ -1,15 +1,19 @@
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { Link, useNavigate } from "react-router-dom";
 import { auth } from "../utils/firebase";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addUser, removeUser } from "../utils/userSlice";
 import { useEffect, useState } from "react";
-import { LOGO, USER_AVATAR } from "../utils/constants";
+import { LOGO, SUPPORTED_LANGUAGES, USER_AVATAR } from "../utils/constants";
+import { toggleGptSearchView } from "../utils/gptSlice";
+import { changeLanguage } from "../utils/configSlice";
 
 const Header = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [isScrolled, setIsScrolled] = useState(false);
+  const user = useSelector((store) => store.user);
+  const showGptSearch = useSelector((store) => store.gpt.showGptSearch);
 
   const handleSignOut = () => {
     signOut(auth).catch((error) => {
@@ -46,6 +50,15 @@ const Header = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  const handleGptSearchClick = () => {
+    // Toggle GPT Search
+    dispatch(toggleGptSearchView());
+  };
+
+  const handleLanguageChange = (e) => {
+    dispatch(changeLanguage(e.target.value));
+  };
+
   return (
     <header
       className={`fixed top-0 w-full z-20 transition-all duration-500 ${
@@ -77,17 +90,32 @@ const Header = () => {
             </Link>
           </nav>
         </div>
-        <div className="flex items-center space-x-4">
-          <input
-            type="text"
-            placeholder="Search"
-            className="p-1 rounded bg-gray-800 text-white"
-          />
-          <img className="h-8 " src={USER_AVATAR} alt="Avatar" />
-          <button onClick={handleSignOut} className="text-white">
-            Logout
-          </button>
-        </div>
+        {user && (
+          <div className="flex items-center space-x-4">
+            {showGptSearch && (
+              <select
+                className="p-2 m-2 bg-gray-900 text-white"
+                onChange={handleLanguageChange}
+              >
+                {SUPPORTED_LANGUAGES.map((lang) => (
+                  <option key={lang.identifier} value={lang.identifier}>
+                    {lang.name}
+                  </option>
+                ))}
+              </select>
+            )}
+            <button
+              className="py-2 px-4 mx-4 my-2 bg-purple-800 text-white rounded-lg"
+              onClick={handleGptSearchClick}
+            >
+              {showGptSearch ? "Homepage" : "GPT Search"}
+            </button>
+            <img className="h-8 " src={USER_AVATAR} alt="Avatar" />
+            <button onClick={handleSignOut} className="text-white">
+              Logout
+            </button>
+          </div>
+        )}
       </div>
     </header>
   );
