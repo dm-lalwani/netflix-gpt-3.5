@@ -12,6 +12,7 @@ const Header = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [isScrolled, setIsScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const user = useSelector((store) => store.user);
   const showGptSearch = useSelector((store) => store.gpt.showGptSearch);
 
@@ -34,7 +35,7 @@ const Header = () => {
     });
 
     return () => unsubscribe();
-  }, [auth, dispatch, navigate]);
+  }, [auth, dispatch]);
 
   // Track scroll
   useEffect(() => {
@@ -61,40 +62,54 @@ const Header = () => {
 
   return (
     <header
-      className={`fixed top-0 w-full z-20 transition-all duration-500 ${
+      className={`fixed top-0 w-full z-20 transition-all duration-500  ${
         isScrolled
           ? "bg-black"
           : "bg-gradient-to-r from-black/70 via-black/40 to-transparent"
       }`}
     >
       <div className="flex justify-between items-center p-4">
+        {/* Left side */}
         <div className="flex items-center">
           <Link to="/">
-            <img className="h-8" src={LOGO} alt="Logo" />
+            <img className="h-8 sm:h-10" src={LOGO} alt="Logo" />
           </Link>
-          <nav className="ml-4 space-x-4">
-            <Link to="/" className="text-white">
+
+          {/* Desktop Nav */}
+          <nav className="hidden md:flex ml-4 space-x-4">
+            <Link
+              to="/browse"
+              onClick={handleGptSearchClick}
+              className="text-white"
+            >
               Home
             </Link>
-            <Link to="/tv-shows" className="text-white">
+            <Link to="/browse" className="text-white">
               TV Shows
             </Link>
-            <Link to="/movies" className="text-white">
+            <Link to="/browse" className="text-white">
               Movies
             </Link>
-            <Link to="/new-and-popular" className="text-white">
+            <Link to="/browse" className="text-white">
               New & Popular
             </Link>
-            <Link to="/my-list" className="text-white">
-              My List
+            <Link
+              to="/browse"
+              onClick={handleGptSearchClick}
+              className="text-white"
+            >
+              GPT Search
             </Link>
           </nav>
         </div>
+
+        {/* Right side */}
         {user && (
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-2 sm:space-x-4">
+            {/* Language Selector (shown in GPT mode) */}
             {showGptSearch && (
               <select
-                className="p-2 m-2 bg-gray-900 text-white"
+                className="p-1 sm:p-2 bg-gray-900 text-white text-sm sm:text-base"
                 onChange={handleLanguageChange}
               >
                 {SUPPORTED_LANGUAGES.map((lang) => (
@@ -104,19 +119,58 @@ const Header = () => {
                 ))}
               </select>
             )}
+
+            {/* GPT Search/Homepage Toggle */}
+
+            {/* Avatar + Logout (desktop) */}
+            <div className="hidden sm:flex items-center space-x-2">
+              <img className="h-6 sm:h-8" src={USER_AVATAR} alt="Avatar" />
+              <button
+                onClick={handleSignOut}
+                className="text-white text-sm sm:text-base"
+              >
+                Logout
+              </button>
+            </div>
+
+            {/* Hamburger (mobile only) */}
             <button
-              className="py-2 px-4 mx-4 my-2 bg-purple-800 text-white rounded-lg"
-              onClick={handleGptSearchClick}
+              className="md:hidden text-white text-2xl"
+              onClick={() => setMenuOpen(!menuOpen)}
             >
-              {showGptSearch ? "Homepage" : "GPT Search"}
-            </button>
-            <img className="h-8 " src={USER_AVATAR} alt="Avatar" />
-            <button onClick={handleSignOut} className="text-white">
-              Logout
+              ☰
             </button>
           </div>
         )}
       </div>
+
+      {/* Mobile Dropdown Nav */}
+      {menuOpen && (
+        <div className="md:hidden bg-black/95 text-white flex flex-col space-y-4 px-6 py-4">
+          <Link to="/" onClick={() => setMenuOpen(false)}>
+            Home
+          </Link>
+          <Link to="/tv-shows" onClick={() => setMenuOpen(false)}>
+            TV Shows
+          </Link>
+          <Link to="/movies" onClick={() => setMenuOpen(false)}>
+            Movies
+          </Link>
+          <Link to="/new-and-popular" onClick={() => setMenuOpen(false)}>
+            New & Popular
+          </Link>
+          <Link to="/my-list" onClick={() => setMenuOpen(false)}>
+            My List
+          </Link>
+
+          <div className="flex items-center space-x-2 mt-4">
+            <img className="h-6" src={USER_AVATAR} alt="Avatar" />
+            <button onClick={handleSignOut} className="text-white">
+              Logout
+            </button>
+          </div>
+        </div>
+      )}
     </header>
   );
 };
