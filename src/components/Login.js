@@ -31,6 +31,8 @@ const Login = () => {
           password.current.value
         );
     setErrorMessage(message || "");
+    // Stop if validation failed
+    if (message) return;
 
     if (!isSignIn) {
       createUserWithEmailAndPassword(
@@ -72,7 +74,6 @@ const Login = () => {
         .then((userCredential) => {
           // Signed in
           const user = userCredential.user;
-        
         })
         .catch((error) => {
           const errorCode = error.code;
