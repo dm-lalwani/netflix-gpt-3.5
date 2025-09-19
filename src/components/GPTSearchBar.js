@@ -34,16 +34,12 @@
         model: "gpt-3.5-turbo",
       });
 
-      console.log(gptResults.choices?.[0]?.message?.content);
-
       const gptMovies = gptResults.choices?.[0]?.message?.content.split(",");
 
       const promiseArray = gptMovies.map((movie) => searchMovieTMDB(movie));
       // [Promise, Promise, Promise, Promise, Promise]
 
       const tmdbResults = await Promise.all(promiseArray);
-
-      console.log(tmdbResults);
 
       dispatch(
         addGptMovieResult({ movieNames: gptMovies, movieResults: tmdbResults })
