@@ -7,7 +7,7 @@ const VideoTitle = ({ title, overview }) => {
         px-2 md:px-12
         text-white
         bg-gradient-to-r from-black/70 via-black/40 to-transparent
-        mt-[64px]
+        mt-10 md:mt-[64px]
       "
     >
       <h1 className="text-2xl md:text-5xl font-bold">{title}</h1>

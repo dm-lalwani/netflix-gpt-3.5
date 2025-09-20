@@ -147,20 +147,32 @@ const Header = () => {
       {/* Mobile Dropdown Nav */}
       {menuOpen && (
         <div className="md:hidden bg-black/95 text-white flex flex-col space-y-4 px-6 py-4">
-          <Link to="/" onClick={() => setMenuOpen(false)}>
+          <Link
+            to="/browse"
+            onClick={() => {
+              setMenuOpen(false);
+              handleGptSearchClick();
+            }}
+          >
             Home
           </Link>
-          <Link to="/tv-shows" onClick={() => setMenuOpen(false)}>
+          <Link to="/browse" onClick={() => setMenuOpen(false)}>
             TV Shows
           </Link>
-          <Link to="/movies" onClick={() => setMenuOpen(false)}>
+          <Link to="/browse" onClick={() => setMenuOpen(false)}>
             Movies
           </Link>
-          <Link to="/new-and-popular" onClick={() => setMenuOpen(false)}>
+          <Link to="/browse" onClick={() => setMenuOpen(false)}>
             New & Popular
           </Link>
-          <Link to="/my-list" onClick={() => setMenuOpen(false)}>
-            My List
+          <Link
+            to="/browse"
+            onClick={() => {
+              setMenuOpen(false);
+              handleGptSearchClick();
+            }}
+          >
+            GPT Search
           </Link>
 
           <div className="flex items-center space-x-2 mt-4">
